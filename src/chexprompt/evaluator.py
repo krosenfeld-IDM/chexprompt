@@ -10,7 +10,7 @@ from openai import OpenAI, AsyncOpenAI
 
 client = OpenAI()
 aclient = AsyncOpenAI()
-import openai.error
+# import openai.error
 from aiohttp import ClientSession
 from tqdm.asyncio import tqdm_asyncio
 from chexprompt.eval_utils import format_full_prompt, extract_rating_dicts
