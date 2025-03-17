@@ -6,6 +6,10 @@ from typing import Any, Dict, List, Tuple
 import asyncio
 import aiolimiter
 import openai
+from openai import OpenAI, AsyncOpenAI
+
+client = OpenAI()
+aclient = AsyncOpenAI()
 import openai.error
 from aiohttp import ClientSession
 from tqdm.asyncio import tqdm_asyncio
@@ -239,16 +243,14 @@ class ReportEvaluator:
         self, formatted_prompt: List[Dict[str, str]]
     ) -> Dict[str, str]:
 
-        return openai.ChatCompletion.create(
-            engine=self.engine,
-            messages=formatted_prompt,
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-            top_p=self.top_p,
-            frequency_penalty=self.frequency_penalty,
-            presence_penalty=self.presence_penalty,
-            stop=self.stop,
-        )
+        return client.chat.completions.create(engine=self.engine,
+        messages=formatted_prompt,
+        temperature=self.temperature,
+        max_tokens=self.max_tokens,
+        top_p=self.top_p,
+        frequency_penalty=self.frequency_penalty,
+        presence_penalty=self.presence_penalty,
+        stop=self.stop)
 
     async def generate_openai_chat_completion_async(
         self,
@@ -256,17 +258,15 @@ class ReportEvaluator:
         **kwargs,
     ) -> Dict[str, str]:
 
-        return await openai.ChatCompletion.acreate(
-            engine=self.engine,
-            messages=formatted_prompt,
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-            top_p=self.top_p,
-            frequency_penalty=self.frequency_penalty,
-            presence_penalty=self.presence_penalty,
-            stop=self.stop,
-            **kwargs,
-        )
+        return await aclient.chat.completions.create(engine=self.engine,
+        messages=formatted_prompt,
+        temperature=self.temperature,
+        max_tokens=self.max_tokens,
+        top_p=self.top_p,
+        frequency_penalty=self.frequency_penalty,
+        presence_penalty=self.presence_penalty,
+        stop=self.stop,
+        **kwargs)
 
     async def _throttled_openai_chat_completion_acreate(
         self,
@@ -280,7 +280,7 @@ class ReportEvaluator:
                     return await self.generate_openai_chat_completion_async(
                         formatted_prompt, **kwargs
                     )
-                except openai.error.RateLimitError as e:
+                except openai.RateLimitError as e:
                     sleep_time = int(
                         str(e).split("Please retry after ")[1].split()[0]
                     ) + 30 * (1 + trial_count**2)
@@ -293,7 +293,7 @@ class ReportEvaluator:
                         str(e) + "\n" + "OpenAI API timeout. Sleeping for 10 seconds."
                     )
                     await asyncio.sleep(10)
-                except openai.error.InvalidRequestError:
+                except openai.InvalidRequestError:
                     logging.warning("OpenAI API Invalid Request: Prompt was filtered")
                     return {
                         "choices": [
@@ -304,17 +304,17 @@ class ReportEvaluator:
                             }
                         ]
                     }
-                except openai.error.APIConnectionError:
+                except openai.APIConnectionError:
                     logging.warning(
                         "OpenAI API Connection Error: Error Communicating with OpenAI"
                     )
                     await asyncio.sleep(10)
-                except openai.error.Timeout as e:
+                except openai.Timeout as e:
                     logging.warning(
                         str(e) + "\n" + "OpenAI APITimeout Error: OpenAI Timeout"
                     )
                     await asyncio.sleep(10)
-                except openai.error.APIError as e:
+                except openai.APIError as e:
                     logging.warning(f"OpenAI API error: {e}")
                     break
             return {"choices": [{"message": {"content": ""}}]}

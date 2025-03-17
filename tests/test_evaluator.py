@@ -3,10 +3,6 @@ import os
 import openai
 import chexprompt
 
-openai.api_type = "azure"
-openai.api_base = os.environ["OPENAI_API_BASE"]
-openai.api_version = os.environ["OPENAI_API_VERSION"]
-openai.api_key = os.environ["OPENAI_API_KEY"]
 engine = "gpt-4-1106-preview"  # Azure OpenAI deployment name
 
 
