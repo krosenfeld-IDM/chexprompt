@@ -1,0 +1,43 @@
+{
+    "name": "zsh",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+          "eamodio.gitlens",
+          "ms-vscode-remote.remote-containers"
+        ],
+        "settings": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+          },
+          "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
+          "python.venvPath": "${workspaceFolder}/.pixi/envs/default" ,                         
+          "terminal.integrated.defaultProfile.linux": "zsh",
+          "terminal.integrated.profiles.linux": {
+            "bash": {
+              "path": "bash",
+              "icon": "terminal-bash"
+            },
+            "zsh": {
+              "path": "zsh"
+            }
+          }
+        }
+      }
+    },
+    "remoteUser": "node",
+    "remoteEnv": {
+      "NODE_OPTIONS": "--max-old-space-size=4096",
+      "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+    "workspaceFolder": "/workspace"
+  }
