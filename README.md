@@ -5,6 +5,7 @@ CheXprompt is a novel approach for evaluating radiology reports for chest X-rays
 CheXprompt was introduced in the LLaVA-Rad Paper: [Towards A Clinically Accessible Radiology Foundation Model: Open-Access and Lightweight chest X-ray Findings Generation With Automated Evaluation](https://arxiv.org/abs/2403.08002)
 
 ## Usage
+
 ### 1. Install Instructions
 
 To install CheXprompt, clone this repository, change into its directory and run the following command:
@@ -25,10 +26,11 @@ openai.api_type = "azure"
 openai.api_base = os.environ["OPENAI_API_BASE"]  # e.g., https://{your-resource-name}.openai.azure.com/
 openai.api_version = os.environ["OPENAI_API_VERSION"]  # e.g., 2023-07-01-preview
 openai.api_key = os.environ["OPENAI_API_KEY"]
-engine = "gpt-4-1106-preview"  # Replace with your Azure OpenAI model deployment name
+engine = "openai:gpt-4-1106-preview"  # Replace with your Azure OpenAI model deployment name or AISuite id
 ```
 
 Then, you can use the following code to evaluate a radiology report:
+
 ```python
 import chexprompt
 
@@ -43,7 +45,7 @@ results = evaluator.evaluate(reference_report, candidate_report)
 print(results)
 ```
 
-If you would like to evaluate a large amount of reports, we recommend enabling asynchronous mode, as follows:
+If you would like to evaluate a large amount of reports, we recommend enabling asynchronous mode, as follows (available only for openai models):
 
 ```python
 import chexprompt
@@ -62,7 +64,6 @@ print(results)
 
 ```
 
-
 ## Frequently Asked Questions (FAQs)
 
 <details>
@@ -75,8 +76,8 @@ See citation below.
 In our manuscript we describe tests with GPT-4 (i.e. GPT-4 Version 0613) and GPT-4 Turbo (GPT-4 version 1106-Preview).
 
 See: [description of models in azure documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=python-secure%2Cglobal-standard%2Cstandard-chat-completions#gpt-4o-and-gpt-4-turbo)
-  </details>
 
+  </details>
 
 ## Citation
 
@@ -88,12 +89,12 @@ See: [description of models in azure documentation](https://learn.microsoft.com/
   year={2024}
 }
 ```
-</details>
 
+</details>
 
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
@@ -107,8 +108,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.

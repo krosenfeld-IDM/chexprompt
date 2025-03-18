@@ -7,8 +7,9 @@ import asyncio
 import aiolimiter
 import openai
 from openai import OpenAI, AsyncOpenAI
+from aisuite import Client
 
-client = OpenAI()
+client = Client()
 aclient = AsyncOpenAI()
 # import openai.error
 from aiohttp import ClientSession
@@ -189,7 +190,7 @@ class ReportEvaluator:
                             cd["clinically_significant"] is None
                             or cd["clinically_insignificant"] is None
                         ):
-                            response = self.generate_openai_chat_completion(fp)
+                            response = self.generate_chat_completion(fp)
                             significant, insignificant = extract_rating_dicts(response)
                             cd["clinically_significant"] = significant
                             cd["clinically_insignificant"] = insignificant
@@ -218,7 +219,7 @@ class ReportEvaluator:
         - result: Dict[str, Dict[str, int]], the evaluation result
         """
 
-        response = self.generate_openai_chat_completion(formatted_prompt).to_dict()
+        response = self.generate_chat_completion(formatted_prompt).to_dict()
 
         significant, insignificant = extract_rating_dicts(response)
 
@@ -226,7 +227,7 @@ class ReportEvaluator:
 
         if significant is None or insignificant is None and self.max_retries > 0:
             while num_retries < self.max_retries:
-                response = self.generate_openai_chat_completion(full_prompt)
+                response = self.generate_chat_completion(full_prompt)
                 significant, insignificant = extract_rating_dicts(response)
                 num_retries += 1
                 if significant is not None and insignificant is not None:
@@ -239,12 +240,13 @@ class ReportEvaluator:
 
         return completion_dict
 
-    def generate_openai_chat_completion(
+    def generate_chat_completion(
         self, formatted_prompt: List[Dict[str, str]]
     ) -> Dict[str, str]:
 
+        engine = self.engine if ":" in self.engine else f"openai:{self.engine}"
         return client.chat.completions.create(
-            model=self.engine,
+            model=engine,
             messages=formatted_prompt,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
