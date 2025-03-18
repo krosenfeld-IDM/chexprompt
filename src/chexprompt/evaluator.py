@@ -218,7 +218,7 @@ class ReportEvaluator:
         - result: Dict[str, Dict[str, int]], the evaluation result
         """
 
-        response = self.generate_openai_chat_completion(formatted_prompt)
+        response = self.generate_openai_chat_completion(formatted_prompt).to_dict()
 
         significant, insignificant = extract_rating_dicts(response)
 
@@ -243,14 +243,16 @@ class ReportEvaluator:
         self, formatted_prompt: List[Dict[str, str]]
     ) -> Dict[str, str]:
 
-        return client.chat.completions.create(engine=self.engine,
-        messages=formatted_prompt,
-        temperature=self.temperature,
-        max_tokens=self.max_tokens,
-        top_p=self.top_p,
-        frequency_penalty=self.frequency_penalty,
-        presence_penalty=self.presence_penalty,
-        stop=self.stop)
+        return client.chat.completions.create(
+            model=self.engine,
+            messages=formatted_prompt,
+            temperature=self.temperature,
+            max_tokens=self.max_tokens,
+            top_p=self.top_p,
+            frequency_penalty=self.frequency_penalty,
+            presence_penalty=self.presence_penalty,
+            stop=self.stop
+        )
 
     async def generate_openai_chat_completion_async(
         self,
