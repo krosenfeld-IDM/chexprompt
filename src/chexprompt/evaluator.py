@@ -227,7 +227,7 @@ class ReportEvaluator:
 
         if significant is None or insignificant is None and self.max_retries > 0:
             while num_retries < self.max_retries:
-                response = self.generate_chat_completion(full_prompt)
+                response = self.generate_chat_completion(formatted_prompt)
                 significant, insignificant = extract_rating_dicts(response)
                 num_retries += 1
                 if significant is not None and insignificant is not None:
