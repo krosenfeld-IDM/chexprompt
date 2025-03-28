@@ -219,7 +219,11 @@ class ReportEvaluator:
         - result: Dict[str, Dict[str, int]], the evaluation result
         """
 
-        response = self.generate_chat_completion(formatted_prompt).to_dict()
+        response = self.generate_chat_completion(formatted_prompt)
+        if hasattr(response, 'to_dict'):
+            response = response.to_dict()
+        else:
+            response = {'choices': [{'message': {'content': response.choices[0].message.content}}]}
 
         significant, insignificant = extract_rating_dicts(response)
 
