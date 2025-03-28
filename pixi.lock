@@ -232,7 +232,7 @@ packages:
 - pypi: .
   name: chexprompt
   version: 0.1.0
-  sha256: 14c82a4daabb83c90701b2aeed4bc5d7feab695c8672c9296a729ee4392f42fc
+  sha256: 1a9b7cf956fbd2641e373a16bd2b42456f28a92e166515058b8fa7dd35dd41c6
   requires_python: '>=3.11,<3.13'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/colorama-0.4.6-pyhd8ed1ab_1.conda
